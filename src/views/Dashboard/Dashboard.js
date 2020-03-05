@@ -2,8 +2,10 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
+
 import {
   Budget,
+  Geld,
   TotalUsers,
   TasksProgress,
   TotalProfit,
@@ -35,7 +37,7 @@ const Dashboard = () => {
           xl={3}
           xs={12}
         >
-          <Budget />
+          <Geld />
         </Grid>
         <Grid
           item

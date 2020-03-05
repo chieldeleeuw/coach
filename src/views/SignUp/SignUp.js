@@ -3,6 +3,7 @@ import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
+import * as firebase from "firebase"
 import {
   Grid,
   Button,
@@ -187,6 +188,13 @@ const SignUp = props => {
 
   const handleSignUp = event => {
     event.preventDefault();
+    //add logic to create the user with all data points
+      firebase.auth().createUserWithEmailAndPassword(formState.values.email, formState.values.password).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+      });
     history.push('/');
   };
 
@@ -282,6 +290,20 @@ const SignUp = props => {
                   }
                   label="Last name"
                   name="lastName"
+                  onChange={handleChange}
+                  type="text"
+                  value={formState.values.lastName || ''}
+                  variant="outlined"
+                />
+                <TextField
+                  className={classes.textField}
+                  error={hasError('lastName')}
+                  fullWidth
+                  helperText={
+                    hasError('lastName') ? formState.errors.lastName[0] : null
+                  }
+                  label="Team name"
+                  name="teamName"
                   onChange={handleChange}
                   type="text"
                   value={formState.values.lastName || ''}

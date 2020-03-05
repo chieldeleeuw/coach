@@ -150,8 +150,8 @@ const UsersTable = props => {
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
-                      {user.address.city}, {user.address.state},{' '}
-                      {user.address.country}
+                      {/* {user.address.city}, {user.address.state},{' '}
+                      {user.address.country} */}
                     </TableCell>
                     <TableCell>{user.phone}</TableCell>
                     <TableCell>

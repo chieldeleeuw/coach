@@ -6,7 +6,7 @@ export const data = {
     {
       label: 'This year',
       backgroundColor: palette.primary.main,
-      data: [18, 5, 19, 27, 29, 19, 20]
+      data: [30, 5, 19, 27, 29, 19, 20]
     },
     {
       label: 'Last year',

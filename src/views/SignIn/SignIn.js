@@ -12,7 +12,7 @@ import {
   Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
+import firebase from './../../modules/firebase'
 import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
 
 const schema = {
@@ -172,7 +172,18 @@ const SignIn = props => {
 
   const handleSignIn = event => {
     event.preventDefault();
-    history.push('/');
+    console.log("signing in")
+    firebase.auth().signInWithEmailAndPassword(formState.values.email, formState.values.password)
+    .then(
+      console.log('logged in the user')
+    )
+    .catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+    });
+    history.push('/dashboard');
   };
 
   const hasError = field =>

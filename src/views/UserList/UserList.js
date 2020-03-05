@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-
 import { UsersToolbar, UsersTable } from './components';
-import mockData from './data';
+import { useUser } from './../../modules/users';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,10 +13,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UserList = () => {
+  const {users, requestUsers} = useUser();
+  useEffect(() => {
+    if(users.length === 0) {
+      requestUsers();
+    }
+  }, [])
   const classes = useStyles();
-
-  const [users] = useState(mockData);
-
   return (
     <div className={classes.root}>
       <UsersToolbar />
