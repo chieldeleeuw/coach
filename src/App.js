@@ -11,6 +11,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import './assets/scss/index.scss';
 import validators from './common/validators';
 import Routes from './Routes';
+import { AuthProvider } from './modules/Auth.js';
+import firebase from './firebase'
 
 const browserHistory = createBrowserHistory();
 
@@ -27,11 +29,11 @@ const App = () => {
   
     return (
       <ThemeProvider theme={theme}>
-        
+        <AuthProvider>
           <Router history={browserHistory}>
             <Routes loggedIn={true}/>
           </Router>
-        
+        </AuthProvider>
       </ThemeProvider>
     );
 }

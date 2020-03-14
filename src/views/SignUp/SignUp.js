@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
-import * as firebase from "firebase"
+import firebase from './../../firebase';
 import {
   Grid,
   Button,
@@ -186,17 +186,33 @@ const SignUp = props => {
     history.goBack();
   };
 
-  const handleSignUp = event => {
+  //default template event for signing up
+  // const handleSignUp = event => {
+  //   event.preventDefault();
+  //   //add logic to create the user with all data points
+  //     firebase.auth().createUserWithEmailAndPassword(formState.values.email, formState.values.password).catch(function(error) {
+  //       // Handle Errors here.
+  //       var errorCode = error.code;
+  //       var errorMessage = error.message;
+  //       // ...
+  //     });
+  //   history.push('/');
+  // };
+
+  const handleSignUp = useCallback( async event => {
     event.preventDefault();
     //add logic to create the user with all data points
-      firebase.auth().createUserWithEmailAndPassword(formState.values.email, formState.values.password).catch(function(error) {
+    try {
+      await firebase.auth().createUserWithEmailAndPassword(formState.values.email, formState.values.password);
+      history.push('/');
+    } catch(error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
+        alert(errorCode, " - ", errorMessage)
         // ...
-      });
-    history.push('/');
-  };
+      }
+    });
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;

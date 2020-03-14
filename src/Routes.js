@@ -17,12 +17,17 @@ import {
   SignIn as SignInView,
   NotFound as NotFoundView
 } from './views';
-import firebase, {UserContext} from './modules/firebase'
+//import firebase, {UserContext} from './modules/firebase'
 //import {useFirebaseUser, FirebaseUserContextProvider } from './modules/AuthStateListener/isLoggedIn';
+import { AuthContext } from './modules/Auth.js'
 
 
 
 const Routes = (props) => {
+
+  const {currentUser} = useContext(AuthContext);
+
+  console.log(currentUser)
 
     return (
     
