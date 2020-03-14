@@ -11,8 +11,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import './assets/scss/index.scss';
 import validators from './common/validators';
 import Routes from './Routes';
-import { useFirebaseUser, FirebaseUserContextProvider } from './modules/AuthStateListener/isLoggedIn';
-import firebase, {onAuthStateChanged} from './modules/firebase'
 
 const browserHistory = createBrowserHistory();
 
@@ -25,32 +23,17 @@ validate.validators = {
   ...validators
 };  
 
-export const App = () => {
-
-  // const [user, setUser] = useState({ loggedIn: false });
-  // useEffect(() => {
-  //   //const unsubscribe = onAuthStateChanged(setUser());
-  //   return () => {
-  //     https://foleon.productboard.com/();
-  //   };
-  // }, []);
-  
-  // const {firebaseUser, requestFirebaseUser} = useFirebaseUser();
-  // useEffect(() => {
-  //     console.log(firebaseUser)
-  //   if(loggedIn) {
-  //     console.log("requestingFirebaseUser again")
-  //     requestFirebaseUser();
-  //   }
-  // }, [])
+const App = () => {
   
     return (
       <ThemeProvider theme={theme}>
-        <FirebaseUserContextProvider>
+        
           <Router history={browserHistory}>
             <Routes loggedIn={true}/>
           </Router>
-        </FirebaseUserContextProvider>
+        
       </ThemeProvider>
     );
 }
+
+export default App
