@@ -1,7 +1,7 @@
 import React, {useEffect, useContext} from 'react';
 import { Switch, Redirect } from 'react-router-dom';
 
-import { RouteWithLayout } from './components';
+import { RouteWithLayout, PrivateRouteWithLayout } from './components';
 import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
 
 import {UserContextProvider} from './modules/users'
@@ -15,7 +15,8 @@ import {
   Settings as SettingsView,
   SignUp as SignUpView,
   SignIn as SignInView,
-  NotFound as NotFoundView
+  NotFound as NotFoundView,
+  CreateTeam as CreateTeamView
 } from './views';
 //import firebase, {UserContext} from './modules/firebase'
 //import {useFirebaseUser, FirebaseUserContextProvider } from './modules/AuthStateListener/isLoggedIn';
@@ -37,43 +38,43 @@ const Routes = (props) => {
             from="/"
             to="/dashboard"
           />
-          <RouteWithLayout
+          <PrivateRouteWithLayout
             component={DashboardView}
             exact
             layout={MainLayout}
             path="/dashboard"
           />
-          <RouteWithLayout
+          <PrivateRouteWithLayout
             component={UserListView}
             exact
             layout={MainLayout}
             path="/users"
           />
-          <RouteWithLayout
+          <PrivateRouteWithLayout
             component={ProductListView}
             exact
             layout={MainLayout}
             path="/products"
           />
-          <RouteWithLayout
+          <PrivateRouteWithLayout
             component={TypographyView}
             exact
             layout={MainLayout}
             path="/typography"
           />
-          <RouteWithLayout
+          <PrivateRouteWithLayout
             component={IconsView}
             exact
             layout={MainLayout}
             path="/icons"
           />
-          <RouteWithLayout
+          <PrivateRouteWithLayout
             component={AccountView}
             exact
             layout={MainLayout}
             path="/account"
           />
-          <RouteWithLayout
+          <PrivateRouteWithLayout
             component={SettingsView}
             exact
             layout={MainLayout}
@@ -96,6 +97,12 @@ const Routes = (props) => {
             exact
             layout={MinimalLayout}
             path="/not-found"
+          />
+          <PrivateRouteWithLayout
+            component={CreateTeamView}
+            exact
+            layout={MainLayout}
+            path="/create-team"
           />
           <Redirect to="/not-found" />
         </Switch>
