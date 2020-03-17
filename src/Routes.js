@@ -16,7 +16,8 @@ import {
   SignUp as SignUpView,
   SignIn as SignInView,
   NotFound as NotFoundView,
-  CreateTeam as CreateTeamView
+  CreateTeam as CreateTeamView,
+  YourProfile as YourProfileView
 } from './views';
 //import firebase, {UserContext} from './modules/firebase'
 //import {useFirebaseUser, FirebaseUserContextProvider } from './modules/AuthStateListener/isLoggedIn';
@@ -101,8 +102,14 @@ const Routes = (props) => {
           <PrivateRouteWithLayout
             component={CreateTeamView}
             exact
-            layout={MainLayout}
+            layout={MinimalLayout}
             path="/create-team"
+          />
+          <PrivateRouteWithLayout
+            component={YourProfileView}
+            exact
+            layout={MinimalLayout}
+            path="/your-profile"
           />
           <Redirect to="/not-found" />
         </Switch>

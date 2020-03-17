@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { Link as RouterLink, withRouter, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
@@ -14,6 +14,7 @@ import {
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import firebase from './../../firebase';
 import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
+import { AuthContext } from 'modules/Auth.js';
 
 const schema = {
   email: {
@@ -170,24 +171,30 @@ const SignIn = props => {
     }));
   };
 
-  const handleSignIn = event => {
+  const handleSignIn = useCallback( async event => {
     event.preventDefault();
     console.log("signing in")
-    firebase.auth().signInWithEmailAndPassword(formState.values.email, formState.values.password)
-    .then(
-      console.log('logged in the user')
-    )
-    .catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ...
-    });
-    history.push('/dashboard');
-  };
+    try {
+      await firebase.auth().signInWithEmailAndPassword(formState.values.email, formState.values.password)
+      console.log("logged in the user")
+      history.push('/dashboard');
+    } catch(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        alert(errorCode, " - ", errorMessage)
+    }
+  })   
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
+
+  const {currentUser} = useContext(AuthContext);
+
+  if(currentUser) {
+    return <Redirect to="/dashboard" />
+    
+  }
 
   return (
     <div className={classes.root}>

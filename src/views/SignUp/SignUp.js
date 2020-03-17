@@ -67,7 +67,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundImage: 'url(/images/auth.jpg)',
+    //backgroundImage: 
+    background:  `linear-gradient(rgba(63, 81, 181, 0.45), rgba(63, 81, 181, 0.45)), url(/images/pitchBirdView.jpg)`,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center'
@@ -204,7 +205,33 @@ const SignUp = props => {
     //add logic to create the user with all data points
     try {
       await firebase.auth().createUserWithEmailAndPassword(formState.values.email, formState.values.password);
-      history.push('/');
+      var user = firebase.auth().currentUser;
+        user.updateProfile({
+          displayName: `${formState.values.firstName} ${formState.values.lastName}`,
+          photoURL: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1266&q=80"
+        }).then(function() {
+          // Update successful.
+          //set database info here
+            // Add a new document in collection "cities"
+            const db = firebase.firestore();
+              db.collection("user").doc(user.uid).set({
+                firstName: formState.values.firstName,
+                lastName: formState.values.lastName,
+                email: formState.values.email,
+                teamName: formState.values.teamName,
+              })
+              .then(function() {
+                console.log("Document successfully written!");
+                history.push('/create-team');
+              })
+              .catch(function(error) {
+                console.error("Error writing document: ", error);
+              });
+
+        }).catch(function(error) {
+          // An error happened.
+          });
+      
     } catch(error) {
         // Handle Errors here.
         var errorCode = error.code;
@@ -234,21 +261,20 @@ const SignUp = props => {
                 className={classes.quoteText}
                 variant="h1"
               >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
+                Als ik zou willen dat je het begreep, had ik het wel beter uitgelegd.
               </Typography>
               <div className={classes.person}>
                 <Typography
                   className={classes.name}
                   variant="body1"
                 >
-                  Takamaru Ayako
+                  Johan Cruijff
                 </Typography>
                 <Typography
                   className={classes.bio}
                   variant="body2"
                 >
-                  Manager at inVision
+                  Nederlands voetballer en coach
                 </Typography>
               </div>
             </div>
@@ -313,16 +339,16 @@ const SignUp = props => {
                 />
                 <TextField
                   className={classes.textField}
-                  error={hasError('lastName')}
+                  error={hasError('teamName')}
                   fullWidth
                   helperText={
-                    hasError('lastName') ? formState.errors.lastName[0] : null
+                    hasError('teamName') ? formState.errors.lastName[0] : null
                   }
                   label="Team name"
                   name="teamName"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.lastName || ''}
+                  value={formState.values.teamName || ''}
                   variant="outlined"
                 />
                 <TextField

@@ -7,6 +7,7 @@ import { AppBar, Toolbar, Badge, Hidden, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
+import firebase from 'firebase';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,6 +23,10 @@ const useStyles = makeStyles(theme => ({
 
 const Topbar = props => {
   const { className, onSidebarOpen, ...rest } = props;
+
+  const handleSignOut = () => {
+    firebase.auth().signOut()
+  }
 
   const classes = useStyles();
 
@@ -53,6 +58,7 @@ const Topbar = props => {
           <IconButton
             className={classes.signOutButton}
             color="inherit"
+            onClick={handleSignOut}
           >
             <InputIcon />
           </IconButton>

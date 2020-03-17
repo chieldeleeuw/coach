@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, Typography } from '@material-ui/core';
+import { useUser } from './../../../../../../modules/users';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,9 +24,14 @@ const useStyles = makeStyles(theme => ({
 
 const Profile = props => {
   const { className, ...rest } = props;
-
+  const {users, requestUsers} = useUser();
+  useEffect(() => {
+    if(users.length === 0) {
+      requestUsers();
+    }
+  }, [])
   const classes = useStyles();
-
+  
   const user = {
     name: 'Shen Zhi',
     avatar: '/images/avatars/avatar_11.png',
@@ -41,16 +47,17 @@ const Profile = props => {
         alt="Person"
         className={classes.avatar}
         component={RouterLink}
-        src={user.avatar}
-        to="/settings"
+        src={users.length > 0 ? users[0].avatarUrl : user.avatar}
+        //to="/settings"
+        to="your-profile"
       />
       <Typography
         className={classes.name}
         variant="h4"
       >
-        {user.name}
+        {users.length > 0 ? users[0].firstName : "Jhon Doe"}
       </Typography>
-      <Typography variant="body2">{user.bio}</Typography>
+      <Typography variant="body2">{users.length > 0 ? users[0].teamName : "Klasbak united"}</Typography>
     </div>
   );
 };
