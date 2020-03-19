@@ -15,6 +15,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import firebase from './../../firebase';
 import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
 import { AuthContext } from 'modules/Auth.js';
+import signUpBackground from './../../images/signin.jpg'
 
 const schema = {
   email: {
@@ -51,7 +52,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundImage: 'url(/images/auth.jpg)',
+    // backgroundImage: 'url(/images/auth.jpg)',
+    backgroundImage: `linear-gradient(rgba(63, 81, 181, 0.45), rgba(63, 81, 181, 0.45)), url(${signUpBackground})`,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center'
@@ -213,22 +215,21 @@ const SignIn = props => {
                 className={classes.quoteText}
                 variant="h1"
               >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
+                Voetbal is oorlog.
               </Typography>
               <div className={classes.person}>
                 <Typography
                   className={classes.name}
                   variant="body1"
                 >
-                  Takamaru Ayako
+                  Rinus Michels
                 </Typography>
-                <Typography
+                {/* <Typography
                   className={classes.bio}
                   variant="body2"
                 >
                   Manager at inVision
-                </Typography>
+                </Typography> */}
               </div>
             </div>
           </div>
@@ -260,9 +261,9 @@ const SignIn = props => {
                   color="textSecondary"
                   gutterBottom
                 >
-                  Sign in with social media
+                  Log in met je emailadres.
                 </Typography>
-                <Grid
+                {/* <Grid
                   className={classes.socialButtons}
                   container
                   spacing={2}
@@ -288,15 +289,15 @@ const SignIn = props => {
                       Login with Google
                     </Button>
                   </Grid>
-                </Grid>
-                <Typography
+                </Grid> */}
+                {/* <Typography
                   align="center"
                   className={classes.sugestion}
                   color="textSecondary"
                   variant="body1"
                 >
                   or login with email address
-                </Typography>
+                </Typography> */}
                 <TextField
                   className={classes.textField}
                   error={hasError('email')}

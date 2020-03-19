@@ -1,7 +1,9 @@
 import React, {useState, useEffect, useCallback} from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
+import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
 import {
   Card,
@@ -16,11 +18,15 @@ import {
   Grid,
   TextField,
   Slider,
-  Input
+  Input,
+  Snackbar,
+  IconButton, 
 } from '@material-ui/core';
 import { useUser } from '../../../../modules/users';
 import firebase from '../../../../firebase';
 import { positions } from './../../../../modules/positions'
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
+import UnknownProfile from './../../../../images/unknown.jpg'
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -39,12 +45,20 @@ const useStyles = makeStyles(theme => ({
   },
   uploadButton: {
     marginRight: theme.spacing(2)
+  }, 
+  input: {
+    display: "none",
+  }, 
+  skillsInput: {
+    
   }
+  
 }));
 
 const CreateYourProfile = props => {
   const { className, history, ...rest } = props;
   const {users, requestUsers} = useUser();
+  
     useEffect(() => {
       if(users.length === 0) {
         requestUsers();
@@ -69,6 +83,10 @@ const CreateYourProfile = props => {
       GK_Reflexes: 60,
       GK_Speed: 60
     });
+
+    useEffect(() => {
+      console.log("effect running")
+    })
 
     const handleChange = event => {
       setValues({
@@ -102,49 +120,133 @@ const CreateYourProfile = props => {
        });
     };
 
-    
     const handleProfileCreation = useCallback( async event => {
       event.preventDefault();
       //add logic to create the user with all data points
       const db = firebase.firestore();
       console.log('initial call')
-      try {
+      // try {
         await db.collection("player").add({
                   playerFirstName: users[0].firstName,
-                  playerLastName: users[0].LastName,
+                  playerLastName: users[0].lastName,
                   avatarUrl: values.avatarUrl,
                   playerNumber: values.playerNumber,
-                  positionName: values.positionName,
-                  defending: values.defending,
-                  dribbling: values.dribbling,
-                  pace: values.pace,
-                  defending: values.defending,
-                  passing: values.passing,
-                  physique: values.physique,
-                  shooting: values.shooting,
-                  teamRef: users[0].teamRef
-                }).then(function(docRef) {
+                  position: {
+                    short: values.positionShort
+                  },
+                  skills: {
+                    defending: values.skillsDefending,
+                    dribbling: values.skillsDribbling,
+                    pace: values.skillsPace,
+                    passing: values.skillsPassing,
+                    physique: values.skillsPhysique,
+                    shooting: values.skillsShooting
+                  },
+                  teamRef: users[0].teamRef,
+                  userRef: db.doc(`user/${firebase.auth().currentUser.uid}`)
+                })
+                .then(function(docRef) {
                   console.log("Player document successfully written!", docRef.id);
                   db.collection("user").doc(firebase.auth().currentUser.uid).update({
                     playerRef: db.doc(`player/${docRef.id}`)
                   })
-                  .catch(function(error) {
+                    .catch(function(error) {
                     console.error("Error writing document: ", error);
+                    
                   });
+                }).then(function(){
+                  console.log(props);
+                  history.push('/dashboard');
                 })
-                // .catch(function(error) {
-                //   console.error("Error writing document: ", error);
-                // });
-                history.push('/dashboard');
+                .catch(function(error) {
+                  console.error("Error writing document: ", error);
+                });
+      // catch(error) {
+      //     // Handle Errors here.
+      //     var errorCode = error.code;
+      //     var errorMessage = error.message;
+      //     alert(errorCode, " - ", errorMessage, " - ", error)
+      //     // ...
+      //   }
+    });
+
+    const handleProfileReset = () => {
+      //Upload general avatar
+      setValues({
+        ...values,
+        avatarUrl: UnknownProfile
+      })
+      
+      const db = firebase.firestore();
+        db.collection("user").doc(firebase.auth().currentUser.uid).update({
+            avatarUrl: UnknownProfile
+            }).catch(function(error) {
+            alert(error.message)
+          })  
         
-      } catch(error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          alert(errorCode, " - ", errorMessage, " - ", error)
-          // ...
-        }
-      });
+        firebase.auth().currentUser.updateProfile({
+          photoURL: UnknownProfile
+          }).catch(function(error) {
+          // An error happened.
+        });    
+      }
+        
+
+    const handleProfileUpload = event => {
+      //Get file
+      const file = event.target.files[0]
+    
+      //Create a reference
+      const storageRef = firebase.storage().ref('user_avatars/' + firebase.auth().currentUser.uid)
+      //Upload file
+      
+      const task = storageRef.put(file)
+      //Update progress bar
+      task.on('state_changed', 
+
+          function progress(snapshot) {
+            let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            //setAvatarUpload(percentage)
+            console.log(percentage)
+          },
+
+          function error(err) {
+            alert(err.message)
+          },
+
+          function complete() {
+            console.log('image uploaded successfully')
+            storageRef.getDownloadURL().then(function(url) {
+              const db = firebase.firestore();
+              console.log(url)
+              setValues({
+                ...values,
+                avatarUrl: url
+              })
+              setOpen(true);
+               db.collection("user").doc(firebase.auth().currentUser.uid).update({
+                    avatarUrl: url
+                  }).catch(function(error) {
+                  alert(error.message)
+                })
+              
+                firebase.auth().currentUser.updateProfile({
+                  photoURL: url
+                  }).then(function() {
+                    console.log(firebase.auth().currentUser.photoURL)
+
+                }).catch(function(error) {
+                  // An error happened.
+                });
+                
+                
+
+            }).catch(function(error) {
+              // Handle any errors
+            })
+          }
+        )
+    }
 
   const classes = useStyles();
 
@@ -154,6 +256,21 @@ const CreateYourProfile = props => {
     country: 'USA',
     timezone: 'GTM-7',
     avatar: '/images/avatars/avatar_11.png'
+  };
+
+  //snackbar settings
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
   };
 
   return (
@@ -181,18 +298,48 @@ const CreateYourProfile = props => {
           </div>
           <Avatar
             className={classes.avatar}
-            src={user.avatar}
+            src={values.avatarUrl ? values.avatarUrl : firebase.auth().currentUser.photoURL}
           />
         </div>
+        <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            message="Profile image succesfully uploaded!"
+            action={
+              <React.Fragment>
+                {/* <Button color="secondary" size="small" onClick={handleClose}>
+                  UNDO
+                </Button> */}
+                <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </React.Fragment>
+            }
+          />
         <CardActions>
-        <Button
-          className={classes.uploadButton}
-          color="primary"
-          variant="text"
+          <input
+            accept="image/*"
+            className={classes.input}
+            id="contained-button-file"
+            multiple
+            type="file"
+            onChange={handleProfileUpload}
+          />
+          <label htmlFor="contained-button-file">
+            <Button variant="text" color="primary" component="span">
+              Upload picture
+            </Button>
+          </label>
+        <Button 
+        variant="text"
+        onClick={handleProfileReset}
         >
-          Upload picture
-        </Button>
-        <Button variant="text">Remove picture</Button>
+          Remove picture</Button>
       </CardActions>
         <div className={classes.progress}>
           {/* <Typography variant="body1">Profile Completeness: 70%</Typography>
@@ -321,7 +468,7 @@ const CreateYourProfile = props => {
                 item 
                 xs={2}>
                     <Input
-                      className={classes.input}
+                      className={classes.skillsInput}
                       value={values.skillsDefending}
                       name="skillsDefending"
                       margin="dense"
@@ -388,7 +535,7 @@ const CreateYourProfile = props => {
                 item 
                 xs={2}>
                     <Input
-                      className={classes.input}
+                      className={classes.skillsInput}
                       value={values.skillsDribbling}
                       name="skillsDribbling"
                       margin="dense"
@@ -447,7 +594,7 @@ const CreateYourProfile = props => {
                 item 
                 xs={2}>
                     <Input
-                      className={classes.input}
+                      className={classes.skillsInput}
                       value={values.skillsPace}
                       name="skillsPace"
                       margin="dense"
@@ -506,7 +653,7 @@ const CreateYourProfile = props => {
                 item 
                 xs={2}>
                     <Input
-                      className={classes.input}
+                      className={classes.skillsInput}
                       value={values.skillsPassing}
                       name="skillsPassing"
                       margin="dense"
@@ -565,7 +712,7 @@ const CreateYourProfile = props => {
                 item 
                 xs={2}>
                     <Input
-                      className={classes.input}
+                      className={classes.skillsInput}
                       value={values.skillsPhysique}
                       name="skillsPhysique"
                       margin="dense"
@@ -625,7 +772,7 @@ const CreateYourProfile = props => {
                 item 
                 xs={2}>
                     <Input
-                      className={classes.input}
+                      className={classes.skillsInput}
                       value={values.skillsShooting}
                       name="skillsShooting"
                       margin="dense"
@@ -684,4 +831,4 @@ CreateYourProfile.propTypes = {
   GK_Speed: PropTypes.number
 };
 
-export default CreateYourProfile;
+export default withRouter(CreateYourProfile);

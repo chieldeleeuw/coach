@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, Typography } from '@material-ui/core';
 import { useUser } from './../../../../../../modules/users';
+import firebase from '../../../../../../firebase';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,7 +48,7 @@ const Profile = props => {
         alt="Person"
         className={classes.avatar}
         component={RouterLink}
-        src={users.length > 0 ? users[0].avatarUrl : user.avatar}
+        src={users.length > 0 ? users[0].avatarUrl : firebase.auth().currentUser.photoURL}
         //to="/settings"
         to="your-profile"
       />
@@ -55,9 +56,9 @@ const Profile = props => {
         className={classes.name}
         variant="h4"
       >
-        {users.length > 0 ? users[0].firstName : "Jhon Doe"}
+        {users.length > 0 ? users[0].firstName : firebase.auth().currentUser.displayName}
       </Typography>
-      <Typography variant="body2">{users.length > 0 ? users[0].teamName : "Klasbak united"}</Typography>
+      <Typography variant="body2">{users.length > 0 ? users[0].teamName : ""}</Typography>
     </div>
   );
 };

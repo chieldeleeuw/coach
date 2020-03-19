@@ -3,11 +3,13 @@ import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Badge, Hidden, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, Badge, Hidden, IconButton, Typography, Icon } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import firebase from 'firebase';
+import FootballField from './../../../../images/field.png';
+import Poll from './../../../../images/poll.svg';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,6 +20,14 @@ const useStyles = makeStyles(theme => ({
   },
   signOutButton: {
     marginLeft: theme.spacing(1)
+  },
+  imageLogo: {
+      fill: "#FFFFFF",
+      maxHeight: "53px"
+  },
+  logoTitle: {
+    paddingLeft: "10px",
+    color: "white"
   }
 }));
 
@@ -38,12 +48,22 @@ const Topbar = props => {
       className={clsx(classes.root, className)}
     >
       <Toolbar>
-        <RouterLink to="/">
+        <RouterLink to="/dashboard">
           <img
             alt="Logo"
-            src="/images/logos/logo--white.svg"
-          />
+            // src="/images/logos/logo--white.svg"
+            src={FootballField}
+            className={classes.imageLogo}
+          /> 
+          
         </RouterLink>
+        
+        <Typography 
+         variant="h1"
+         className={classes.logoTitle}
+         >
+            Coach
+          </Typography>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <IconButton color="inherit">

@@ -15,6 +15,7 @@ import {
   Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import UnkownProfile from './../../images/unknown.jpg'
 
 const schema = {
   firstName: {
@@ -208,7 +209,7 @@ const SignUp = props => {
       var user = firebase.auth().currentUser;
         user.updateProfile({
           displayName: `${formState.values.firstName} ${formState.values.lastName}`,
-          photoURL: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1266&q=80"
+          photoURL: UnkownProfile
         }).then(function() {
           // Update successful.
           //set database info here
