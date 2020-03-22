@@ -4,12 +4,14 @@ import PropTypes from 'prop-types';
 import {withRouter, Redirect} from 'react-router';
 import {AuthContext} from '../../modules/Auth.js';
 import {UserContextProvider} from '../../modules/users'
+import {PlayersContextProvider} from './../../modules/players';
 
 const PrivateRouteWithLayout = props => {
   const { layout: Layout, component: Component, ...rest } = props;
   const {currentUser} = useContext(AuthContext);
   return (
     <UserContextProvider>
+      <PlayersContextProvider>
         <Route
         {...rest}
         render={matchProps => 
@@ -27,6 +29,7 @@ const PrivateRouteWithLayout = props => {
         )
         }
         />
+        </PlayersContextProvider>
     </UserContextProvider>
   );
 };

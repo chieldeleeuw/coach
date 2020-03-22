@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { UsersToolbar, UsersTable } from './components';
 import { useUser } from './../../modules/users';
+import firebase from './../../firebase';
+import { usePlayer } from '../../modules/players';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,17 +16,48 @@ const useStyles = makeStyles(theme => ({
 
 const UserList = () => {
   const {users, requestUsers} = useUser();
+  const {players, requestPlayers} = usePlayer();
+
+  //const {players, setPlayers} = useState();
+ 
   useEffect(() => {
-    if(users.length === 0) {
-      requestUsers();
+    if(players.length === 0) {
+      console.log('players == 0 so using effect from UserList')
+      requestPlayers();
     }
+    console.log(players)
   }, [])
+
+  // useEffect(() => {
+  //   requestPlayers()
+  // }, [])
+
+  // const requestPlayers = () => {
+  //   const db = firebase.firestore();
+  //   const teamRef = users[0].teamRef.id;
+  //   //const teamDBRef = db.collection('team').doc(teamRef)
+  //   console.log(teamRef)
+  //   db.collection('player').where("teamRef", "==",teamRef)
+  //   .onSnapshot(function(querySnapshot) {
+  //     var response = [];
+  //     console.log(querySnapshot)
+  //     querySnapshot.forEach(function(doc) {
+  //       console.log(doc.data())
+  //         response.push(doc.data());
+          
+  //     });
+  //     console.log("Current players: ", response);
+  //     //setPlayers(response)
+  //     });
+  // }
+
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <UsersToolbar />
       <div className={classes.content}>
-        <UsersTable users={users} />
+        {console.log(players)}
+        <UsersTable users={players} />
       </div>
     </div>
   );

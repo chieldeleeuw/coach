@@ -97,6 +97,7 @@ const UsersTable = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
+      {console.log("usersTable running", users)}
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
@@ -115,9 +116,9 @@ const UsersTable = props => {
                     />
                   </TableCell>
                   <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Phone</TableCell>
+                  <TableCell>Number</TableCell>
+                  <TableCell>Position</TableCell>
+                  <TableCell>Defending</TableCell>
                   <TableCell>Registration date</TableCell>
                 </TableRow>
               </TableHead>
@@ -126,7 +127,7 @@ const UsersTable = props => {
                   <TableRow
                     className={classes.tableRow}
                     hover
-                    key={user.id}
+                    key={user.playerFirstName + user.playerLastName + user.playerNumber}
                     selected={selectedUsers.indexOf(user.id) !== -1}
                   >
                     <TableCell padding="checkbox">
@@ -143,17 +144,18 @@ const UsersTable = props => {
                           className={classes.avatar}
                           src={user.avatarUrl}
                         >
-                          {getInitials(user.name)}
+                          {getInitials(`${user.playerFirstName} ${user.playerLastName}`)}
                         </Avatar>
-                        <Typography variant="body1">{user.name}</Typography>
+                        <Typography variant="body1">{user.playerFirstName}</Typography>
                       </div>
                     </TableCell>
-                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.playerNumber}</TableCell>
                     <TableCell>
                       {/* {user.address.city}, {user.address.state},{' '}
                       {user.address.country} */}
+                      {user.position.short}
                     </TableCell>
-                    <TableCell>{user.phone}</TableCell>
+                    <TableCell>{user.position.short}</TableCell>
                     <TableCell>
                       {moment(user.createdAt).format('DD/MM/YYYY')}
                     </TableCell>

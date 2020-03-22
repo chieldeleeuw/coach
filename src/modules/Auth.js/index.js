@@ -12,6 +12,7 @@ export const AuthProvider = ({children}) => {
 
     return(
         <AuthContext.Provider value={{currentUser}}>
+            {console.log("AuthProvider running", currentUser)}
             {children}
         </AuthContext.Provider>
     );

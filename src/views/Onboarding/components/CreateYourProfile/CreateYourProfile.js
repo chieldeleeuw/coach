@@ -127,6 +127,7 @@ const CreateYourProfile = props => {
       console.log('initial call')
       // try {
         await db.collection("player").add({
+                  role: users[0].userRole,
                   playerFirstName: users[0].firstName,
                   playerLastName: users[0].lastName,
                   avatarUrl: values.avatarUrl,
@@ -142,7 +143,7 @@ const CreateYourProfile = props => {
                     physique: values.skillsPhysique,
                     shooting: values.skillsShooting
                   },
-                  teamRef: users[0].teamRef,
+                  teamRef: users[0].teamRef.id,
                   userRef: db.doc(`user/${firebase.auth().currentUser.uid}`)
                 })
                 .then(function(docRef) {

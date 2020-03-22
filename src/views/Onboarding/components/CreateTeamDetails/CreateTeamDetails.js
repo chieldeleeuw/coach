@@ -25,6 +25,7 @@ const useStyles = makeStyles(() => ({
 
 const CreateTeamDetails = props => {
   const { className, history, ...rest } = props;
+  
   const {users, requestUsers} = useUser();
     useEffect(() => {
       if(users.length === 0) {
@@ -104,8 +105,8 @@ const CreateTeamDetails = props => {
       className={clsx(classes.root, className)}
     >
       <Typography variant="h1" align="center">
-        
-          Hi, {users ? users[0].firstName + " 👋": "there 👋"}.
+        {console.log(users)}
+          Hi, {users.length > 0 ? users[0].firstName + " 👋": "there 👋"}.
       </Typography>
      
       <form
